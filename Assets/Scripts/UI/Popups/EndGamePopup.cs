@@ -1,8 +1,10 @@
 using System;
+using GameCore;
 using Plugins.Core.UI.Elements;
 using TMPro;
 using UniRx;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace UI.Popups
@@ -23,6 +25,7 @@ namespace UI.Popups
         [SerializeField] private TextMeshProUGUI _sessionTime;
         [SerializeField] private TextMeshProUGUI _stepsUsed;
         [SerializeField] private Button _restartButton;
+        [SerializeField] private Button _exitButton;
 
         private const string _sessionTimeText = "Time: {0}";
         private const string _stepsUsedText = "Steps: {0}";
@@ -31,6 +34,8 @@ namespace UI.Popups
         {
             _restartButton.onClick.AsObservable().Subscribe(
                 (x) => HideSuccessfully(PopupOutputParameter.Empty));
+            _exitButton.onClick.AsObservable().Subscribe(
+                (x) => SceneManager.LoadScene(GameConstants.MainMenuScene));
         }
 
         protected override void OnDataInitialized()

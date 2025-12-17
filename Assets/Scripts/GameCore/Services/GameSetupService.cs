@@ -6,8 +6,6 @@ namespace GameCore.Services
 {
     public class GameSetupService : IInitializable
     {
-        private const string GamePlayScene = "GamePlayScene";
-        
         private MazeConfig _mazeConfig;
         public MazeConfig MazeConfig => _mazeConfig;
 
@@ -16,8 +14,8 @@ namespace GameCore.Services
             //set default maze config, can be loaded from saved memory here
             _mazeConfig= new MazeConfig()
             {
-                Height = 5,
-                Width = 5,
+                Height = 13,
+                Width = 13,
                 NumberOfExits = 2
             };
         }
@@ -30,7 +28,7 @@ namespace GameCore.Services
 
         public void Play()
         {
-            SceneManager.LoadScene(GamePlayScene);
+            SceneManager.LoadScene(GameConstants.GamePlayScene);
         }
     }
 }

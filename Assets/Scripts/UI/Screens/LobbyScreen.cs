@@ -1,4 +1,6 @@
-﻿using GameCore.Data;
+﻿using System;
+using GameCore;
+using GameCore.Data;
 using GameCore.Services;
 using Plugins.Core.UI;
 using Plugins.Core.UI.Elements;
@@ -14,23 +16,16 @@ namespace UI.Screens
         [SerializeField] private Button _exitButton;
         [SerializeField] private Button _playButton;
 
-        [SerializeField] private TextMeshProUGUI _heightText;
-        [SerializeField] private Button _changeHeightUp;
-        [SerializeField] private Button _changeHeightDown;
+        [SerializeField] private TMP_InputField _heightInput;
+        [SerializeField] private TMP_InputField _widthInput;
+        [SerializeField] private TMP_InputField _exitNumberInput;
 
-        [SerializeField] private TextMeshProUGUI _widthText;
-        [SerializeField] private Button _changeWidthUp;
-        [SerializeField] private Button _changeWidthDown;
-
-        [SerializeField] private TextMeshProUGUI _numberOfExitsText;
-        [SerializeField] private Button _changeExitsUp;
-        [SerializeField] private Button _changeExitsDown;
-
+        [SerializeField] private TextMeshProUGUI _oversideWarningText;
         
         private IUIManager _uiManager;
         private GameSetupService _gameSetupService;
-        private MazeConfig _customMazeConfig;
-
+        private MazeConfig _currentMazeConfig;
+        
         [Inject]
         public void Construct(IUIManager uiManager, GameSetupService gameSetupService)
         {
@@ -41,24 +36,22 @@ namespace UI.Screens
         public override void Initialize()
         {
             SetupMazeSettingsView();
-            _customMazeConfig = _gameSetupService.MazeConfig;
+            SetupMazeWarningText();
+            _currentMazeConfig = _gameSetupService.MazeConfig;
+            _oversideWarningText.gameObject.SetActive(false);
         }
-
+        
         private void SetupMazeSettingsView()
         {
             var config = _gameSetupService.MazeConfig;
-            _heightText.text = config.Height.ToString();
-            _widthText.text = config.Width.ToString();
-            _numberOfExitsText.text = config.NumberOfExits.ToString();
+            _heightInput.text = config.Height.ToString();
+            _widthInput.text = config.Width.ToString();
+            _exitNumberInput.text = config.NumberOfExits.ToString();
         }
-        
-        
-        //TODO: here logic for maze config change
 
         protected override void OnShow()
         {
             base.OnShow();
-
             _exitButton.onClick.AddListener(OnExitLobby);
             _playButton.onClick.AddListener(OnPlay);
         }
@@ -72,16 +65,53 @@ namespace UI.Screens
         
         private void OnPlay()
         {
-            _gameSetupService.SetCustomMazeConfig(_customMazeConfig);
+            if (!TryGetInputMazeSettings())
+            {
+                _oversideWarningText.gameObject.SetActive(true);
+                return;
+            }
+            _gameSetupService.SetCustomMazeConfig(_currentMazeConfig);
             _gameSetupService.Play();
             Hide();
         }
+        
+        private bool TryGetInputMazeSettings()
+        {
+            MazeConfig customMazeConfig = new MazeConfig()
+            {
+                Width = int.Parse(_widthInput.text),
+                Height = int.Parse(_heightInput.text),
+                NumberOfExits = int.Parse(_exitNumberInput.text)
+            };
 
+            if (!ValidateMazeConfig(customMazeConfig))
+            {
+                return false;
+            }
+            
+            _currentMazeConfig = customMazeConfig;
+            return true;
+        }
+
+        private bool ValidateMazeConfig(MazeConfig mazeConfig)
+        {
+            return mazeConfig.Height is <= GameConstants.MaxMazeHeight and >= GameConstants.MinMazeHeight 
+                   && mazeConfig.Width is <= GameConstants.MaxMazeWidth and >= GameConstants.MinMazeWidth 
+                   && mazeConfig.NumberOfExits is <= GameConstants.MaxMazeExitNumbers and >= GameConstants.MinMazeExitNumbers;
+        }
+
+        private void SetupMazeWarningText()
+        {
+            _oversideWarningText.text =
+                $"Sorry, here are limits for the maze size: \n{GameConstants.MinMazeWidth - 1} > width < {GameConstants.MaxMazeWidth + 1}\n" +
+                $" {GameConstants.MinMazeHeight - 1} > height < {GameConstants.MaxMazeHeight + 1}\n" +
+                $" {GameConstants.MinMazeExitNumbers - 1} > number of exits < {GameConstants.MaxMazeExitNumbers + 1}.";
+        }
+        
         private void OnExitLobby()
         {
             _uiManager.Get<MainMenuScreen>().Show(null);
             Hide();
         }
-
     }
 }
