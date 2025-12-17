@@ -14,9 +14,9 @@ namespace GameCore.Services
             //set default maze config, can be loaded from saved memory here
             _mazeConfig= new MazeConfig()
             {
-                Height = 13,
-                Width = 13,
-                NumberOfExits = 2
+                Height = GameConstants.DefaultHeight,
+                Width = GameConstants.DefaultWidth,
+                NumberOfExits = GameConstants.DefaultExit
             };
         }
 
@@ -28,7 +28,7 @@ namespace GameCore.Services
 
         public void Play()
         {
-            SceneManager.LoadScene(GameConstants.GamePlayScene);
+            SceneManager.LoadScene(GameConstants.GamePlayScene, LoadSceneMode.Single);
         }
     }
 }

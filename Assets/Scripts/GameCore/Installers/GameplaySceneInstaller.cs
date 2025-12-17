@@ -28,6 +28,7 @@ namespace GameCore.Installers
             Container.BindInterfacesAndSelfTo<InputService>().AsSingle();
             Container.BindInterfacesAndSelfTo<MazeControllerService>().AsSingle();
             Container.BindInterfacesAndSelfTo<GameTimerService>().AsSingle().NonLazy();
+            //Container.BindInterfacesAndSelfTo<PlayerPrefsGameProgressService>().AsSingle().NonLazy();
 
             //HUD MVC entry point
             var hudView = GameObject.Instantiate(_hudView);

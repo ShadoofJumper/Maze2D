@@ -2,33 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
 namespace GameCore.Controllers.MazeBuilder
 {
     public class MazeGenerator
     {
-        private int _width;
-        private int _height;
-        private int _exitCount;
+        private readonly int _width;
+        private readonly int _height;
+        private readonly int _exitCount;
 
         private MazeCell[,] _map;
-        private System.Random _random = new System.Random();
+        private readonly System.Random _random = new System.Random();
 
-        private const int StartX = 1;
-        private const int StartY = 1;
-        
+        public Vector2Int StartCell { get; private set; }
+
         public MazeGenerator(int width, int height, int exitCount)
         {
-            _width = width;
-            _height = height;
-            
-            //maze must be odd for maze to be correct
-            if (_width % 2 == 0)
-                _width++;
-            
-            if (_height % 2 == 0)
-                _height++;
-            
+            _width = MakeOdd(width);
+            _height = MakeOdd(height);
             _exitCount = Mathf.Max(1, exitCount);
         }
 
@@ -37,7 +27,6 @@ namespace GameCore.Controllers.MazeBuilder
             InitializeMap();
             GenerateMaze();
             PlaceExits();
-
             return _map;
         }
 
@@ -62,26 +51,25 @@ namespace GameCore.Controllers.MazeBuilder
 
         private void GenerateMaze()
         {
-            if (!IsInBounds(StartX, StartY))
-                throw new Exception("Maze too small for start position (2,2)");
+            StartCell = CalculateCenterStart();
 
-            CarvePath(StartX, StartY);
+            if (!IsInBounds(StartCell.x, StartCell.y))
+                throw new Exception("Maze too small for center start position");
+
+            CarvePath(StartCell.x, StartCell.y);
         }
 
         private void CarvePath(int x, int y)
         {
             _map[x, y].SetType(MazeCellType.Floor);
 
-            var directions = GetShuffledDirections();
-
-            foreach (var dir in directions)
+            foreach (var dir in GetShuffledDirections())
             {
                 int nx = x + dir.x * 2;
                 int ny = y + dir.y * 2;
 
                 if (IsInBounds(nx, ny) && _map[nx, ny].Type == MazeCellType.Wall)
                 {
-                    // пробиваємо стіну між клітинками
                     _map[x + dir.x, y + dir.y].SetType(MazeCellType.Floor);
                     CarvePath(nx, ny);
                 }
@@ -98,7 +86,6 @@ namespace GameCore.Controllers.MazeBuilder
                 Vector2Int.right
             };
 
-            // Fisher–Yates shuffle
             for (int i = 0; i < dirs.Length; i++)
             {
                 int j = _random.Next(i, dirs.Length);
@@ -112,28 +99,36 @@ namespace GameCore.Controllers.MazeBuilder
 
         #region Exits
 
-        /// <summary>
-        /// Place exits. Logic will place exits just on right and top walls of the maze
-        /// </summary>
         private void PlaceExits()
         {
             var candidates = new List<MazeCell>();
+
             int rightWallX = _width - 1;
             for (int y = 1; y < _height - 1; y++)
             {
                 if (_map[rightWallX - 1, y].Type == MazeCellType.Floor)
-                {
                     candidates.Add(_map[rightWallX, y]);
-                }
+            }
+
+            int leftWallX = 0;
+            for (int y = 1; y < _height - 1; y++)
+            {
+                if (_map[leftWallX + 1, y].Type == MazeCellType.Floor)
+                    candidates.Add(_map[leftWallX, y]);
             }
 
             int topWallY = _height - 1;
             for (int x = 1; x < _width - 1; x++)
             {
                 if (_map[x, topWallY - 1].Type == MazeCellType.Floor)
-                {
                     candidates.Add(_map[x, topWallY]);
-                }
+            }
+
+            int bottomWallY = 0;
+            for (int x = 1; x < _width - 1; x++)
+            {
+                if (_map[x, bottomWallY + 1].Type == MazeCellType.Floor)
+                    candidates.Add(_map[x, bottomWallY]);
             }
 
             int exitsToPlace = Mathf.Min(_exitCount, candidates.Count);
@@ -148,10 +143,30 @@ namespace GameCore.Controllers.MazeBuilder
 
         #endregion
 
+        #region Helpers
+
+        private Vector2Int CalculateCenterStart()
+        {
+            int cx = _width / 2;
+            int cy = _height / 2;
+
+            // Snap to odd coordinates
+            if (cx % 2 == 0) cx--;
+            if (cy % 2 == 0) cy--;
+
+            return new Vector2Int(cx, cy);
+        }
+
+        private static int MakeOdd(int value)
+        {
+            return value % 2 == 0 ? value + 1 : value;
+        }
+
         private bool IsInBounds(int x, int y)
         {
             return x > 0 && y > 0 && x < _width - 1 && y < _height - 1;
         }
-    }
 
+        #endregion
+    }
 }

@@ -13,6 +13,8 @@ namespace Plugins.Core.UI
         private readonly TimeService _timeService;
         private uint _openedElementsCount = 0;
 
+        public uint OpenedElementsCount => _openedElementsCount;
+        
         public UIManager(List<UIElement> elements, UIFactory factory, TimeService timeService)
         {
             _elements = elements;

@@ -9,6 +9,7 @@ namespace Installers
     {
         public override void InstallBindings()
         {
+            Container.BindInterfacesAndSelfTo<PlayerPrefsGameProgressService>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<GameSetupService>().AsSingle().NonLazy();
         }
     }

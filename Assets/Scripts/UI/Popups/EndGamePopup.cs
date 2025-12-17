@@ -3,6 +3,7 @@ using GameCore;
 using Plugins.Core.UI.Elements;
 using TMPro;
 using UniRx;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -35,13 +36,24 @@ namespace UI.Popups
             _restartButton.onClick.AsObservable().Subscribe(
                 (x) => HideSuccessfully(PopupOutputParameter.Empty));
             _exitButton.onClick.AsObservable().Subscribe(
-                (x) => SceneManager.LoadScene(GameConstants.MainMenuScene));
+                (x) =>
+                {
+                    SceneManager.LoadScene(GameConstants.MainMenuScene);
+                    HideSuccessfully(PopupOutputParameter.Empty);
+                });
         }
 
         protected override void OnDataInitialized()
         {
             _sessionTime.text = String.Format(_sessionTimeText, Data.SessionTime);
             _stepsUsed.text =String.Format(_stepsUsedText, Data.StepsUsed);
+        }
+        
+        protected override void OnHide()
+        {
+            _restartButton?.onClick.RemoveAllListeners();
+            _exitButton?.onClick.RemoveAllListeners();
+            base.OnHide();
         }
 
     }

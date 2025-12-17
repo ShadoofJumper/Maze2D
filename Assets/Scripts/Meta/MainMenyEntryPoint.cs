@@ -1,5 +1,6 @@
 ﻿using Plugins.Core.UI;
 using UI.Screens;
+using UnityEngine;
 using Zenject;
 
 namespace Meta
@@ -14,7 +15,8 @@ namespace Meta
         }
         public void Initialize()
         {
-            _uiManager.Get<MainMenuScreen>().Show(null);
+            if(_uiManager.OpenedElementsCount == 0)
+                _uiManager.Get<MainMenuScreen>().Show(null);
         }
     }
 }

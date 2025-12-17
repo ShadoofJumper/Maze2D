@@ -21,8 +21,6 @@ namespace GameCore.Services.GameMechanicsService
         private IPlayerFactory _playerFactory;
         private GameSessionModel _gameSessionModel;
         
-        private static readonly Vector2 PLAYER_START_CELL = new Vector2(1, 1);
-
         private PlayerEntityController _player;
 
         public Action OnGameComplete { get; set; }
@@ -42,15 +40,15 @@ namespace GameCore.Services.GameMechanicsService
         
         public void StartGame()
         {
-            CreatePlayer();
             CreateMaze();
+            CreatePlayer();
             SetCameraInMazeCenter();
         }
         
         private void CreatePlayer()
         {
             _player = _playerFactory.Create();
-            var playerPos = _mazeControllerService.MazeCoordToWorld(PLAYER_START_CELL);
+            var playerPos = _mazeControllerService.MazeCoordToWorld(_mazeControllerService.MazeCenter);
             _player.SetForcePosition(playerPos);
             _player.OnSuccessStep += OnSuccessStep;
         }

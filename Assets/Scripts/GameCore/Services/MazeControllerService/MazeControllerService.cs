@@ -38,18 +38,9 @@ namespace GameCore.Services.MazeControllerService
             MazeGenerator mazeGenerator = new MazeGenerator(mazeConfig.Width, mazeConfig.Height, mazeConfig.NumberOfExits);
             _currentMaze = mazeGenerator.Generate();
             BuildMazeView(_currentMaze);
-            _mazeCenter = GetMazeCenter();
+            _mazeCenter = new Vector3(mazeGenerator.StartCell.x, mazeGenerator.StartCell.y, 0);
         }
 
-        private Vector3 GetMazeCenter()
-        {
-            return new Vector3(
-                (_currentMaze.GetLength(0) * MAZE_CELL_SIZE) * 0.5f,
-                (_currentMaze.GetLength(1) * MAZE_CELL_SIZE) * 0.5f,
-                0
-            );
-        }
-        
         public bool IsCellFree(Vector2 cellPos)
         {
             if (!IsInsideMap(cellPos))
