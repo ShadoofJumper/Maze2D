@@ -1,0 +1,4 @@
+{
+  "name": "AutoQA.EditModeTests", "references": ["AutoQA.Core"],
+  "includePlatforms": ["Editor"], "optionalUnityReferences": ["TestAssemblies"]
+}

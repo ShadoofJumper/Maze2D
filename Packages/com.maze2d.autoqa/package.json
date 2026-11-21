@@ -1,0 +1,8 @@
+{
+  "name": "com.maze2d.autoqa",
+  "version": "0.1.0",
+  "displayName": "AutoQA Runtime",
+  "unity": "6000.3",
+  "description": "Transport-independent observation and direct execution for Unity QA.",
+  "dependencies": { "com.unity.ugui": "2.0.0" }
+}

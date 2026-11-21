@@ -1,4 +1,4 @@
-﻿using Plugins.Core.Common.Services.GameProgressSaveService;
+using Plugins.Core.Common.Services.GameProgressSaveService;
 using Plugins.Core.UI;
 using Plugins.Core.UI.Elements;
 using TMPro;

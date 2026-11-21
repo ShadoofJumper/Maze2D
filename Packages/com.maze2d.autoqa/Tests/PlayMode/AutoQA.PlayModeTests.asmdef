@@ -1,0 +1,4 @@
+{
+  "name": "AutoQA.PlayModeTests", "references": ["AutoQA.Core", "AutoQA.UGUI", "UnityEngine.UI", "Unity.TextMeshPro"],
+  "optionalUnityReferences": ["TestAssemblies"]
+}

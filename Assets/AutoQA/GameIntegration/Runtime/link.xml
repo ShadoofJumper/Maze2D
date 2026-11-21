@@ -1,0 +1,19 @@
+<linker>
+  <!-- These private fields are read by the Maze2D adapter, including in IL2CPP builds. -->
+  <assembly fullname="Assembly-CSharp">
+    <type fullname="UI.Screens.MainMenuScreen" preserve="nothing">
+      <field name="_playButton" />
+      <field name="_exitGame" />
+    </type>
+    <type fullname="UI.Screens.LobbyScreen" preserve="nothing">
+      <field name="_playButton" />
+      <field name="_exitButton" />
+      <field name="_widthInput" />
+      <field name="_heightInput" />
+      <field name="_exitNumberInput" />
+    </type>
+    <type fullname="GameCore.Services.GameMechanicsService.GameMechanicsService" preserve="nothing">
+      <field name="_player" />
+    </type>
+  </assembly>
+</linker>

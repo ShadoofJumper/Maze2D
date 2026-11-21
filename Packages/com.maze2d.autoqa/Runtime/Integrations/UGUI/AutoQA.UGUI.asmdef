@@ -1,0 +1,1 @@
+{ "name": "AutoQA.UGUI", "references": ["AutoQA.Core", "UnityEngine.UI", "Unity.TextMeshPro"] }

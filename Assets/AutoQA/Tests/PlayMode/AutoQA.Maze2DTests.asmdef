@@ -1,0 +1,4 @@
+{
+  "name": "AutoQA.Maze2DTests",
+  "optionalUnityReferences": ["TestAssemblies"]
+}

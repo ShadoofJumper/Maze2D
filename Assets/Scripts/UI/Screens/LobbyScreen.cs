@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using GameCore;
 using GameCore.Data;
 using GameCore.Services;
@@ -60,7 +60,7 @@ namespace UI.Screens
         {
             base.OnHide();
             _exitButton.onClick.RemoveListener(OnExitLobby);
-            _playButton.onClick.AddListener(OnPlay);
+            _playButton.onClick.RemoveListener(OnPlay);
         }
         
         private void OnPlay()

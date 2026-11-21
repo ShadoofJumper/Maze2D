@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using GameCore.Data;
 using GameCore.Entity.Factory;
 using GameCore.Entity.Player;

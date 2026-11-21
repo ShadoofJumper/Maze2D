@@ -1,5 +1,13 @@
 {
   "dependencies": {
+    "com.maze2d.autoqa": {
+      "version": "file:com.maze2d.autoqa",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.unity.ugui": "2.0.0"
+      }
+    },
     "com.unity.2d.animation": {
       "version": "13.0.4",
       "depth": 1,
